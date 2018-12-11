@@ -1,0 +1,18 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: test-cronjob
+  namespace: dev
+spec:
+  schedule: "* * * * *"
+  startingDeadlineSeconds: 10
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: test-cronjob-container
+            image: gauravcococadocker/cron
+            ports:
+            - containerPort: 8085

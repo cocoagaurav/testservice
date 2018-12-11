@@ -1,0 +1,61 @@
+version: '3.1'
+
+services:
+
+  mysql:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD : "password123"
+      MYSQL_DATABASE : "test"
+    ports:
+      - "3306:3306"
+
+
+  rabbitmq-server:
+    image: "rabbitmq:3-management"
+    hostname: "rabbitmq-server"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  myapi:
+    build: /Users/gaurav/go/src/github.com/cocoagaurav/httpHandler
+    ports:
+      - "8080:8080"
+    links:
+      - mysql
+      - rabbitmq-server
+
+  postapi:
+    build: /Users/gaurav/go/src/github.com/cocoagaurav/Post
+    ports:
+      - "8081:8081"
+    links:
+      - mysql
+      - myapi
+      - rabbitmq-server
+
+  scrapapi:
+    build: /Users/gaurav/go/src/github.com/cocoagaurav/scrap
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rabbitmq-server
+    links:
+      - rabbitmq-server
+
+
+#      countjob:
+#        build: /Users/gaurav/go/src/github.com/cocoagaurav/httpHandler/countuser
+#        ports:
+#        - "8000:8000"
+#        depends_on:
+#        - mysql
+#        links:
+#        - mysql
+#

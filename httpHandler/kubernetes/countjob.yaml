@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: countjob
+spec:
+  template:
+    spec:
+      containers:
+      - name: count
+        image: gauravcococadocker/countjob
+        ports:
+        - containerPort: 8000
+      restartPolicy: Never

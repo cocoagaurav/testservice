@@ -1,0 +1,43 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: myapi
+  name: myapi
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: myapi
+    spec:
+      containers:
+      - image: gauravcococadocker/myapi
+        name: myapi
+        ports:
+        - containerPort: 8080
+        env:
+          - name: MYAPI_SQL_URL
+            valueFrom:
+              configMapKeyRef:
+                name: myapiconfig
+                key: SqlUrl
+          - name: MYAPI_RABBIT_URL
+            valueFrom:
+              configMapKeyRef:
+                name: myapiconfig
+                key: RabbitUrl
+          - name: MYAPI_FIREBASE_SERVICE_ID
+            valueFrom:
+              configMapKeyRef:
+                name: myapiconfig
+                key: FireId
+        resources: {}
+      restartPolicy: Always
+status: {}

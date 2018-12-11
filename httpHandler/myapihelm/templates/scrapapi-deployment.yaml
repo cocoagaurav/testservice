@@ -1,0 +1,41 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ .Values.scrap.name }}
+  namespace: {{ .Values.scrap.namespace }}
+  labels:
+    app.kubernetes.io/name: scrapapi
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: scrapapi
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: scrapapi
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.scrap.image.repository }}:{{ .Values.scrap.image.tag }}"
+        imagePullPolicy: {{ .Values.scrap.image.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: {{ .Values.scrap.deployment.containerPort }}
+          protocol: TCP
+
+        resources:
+  {{ toYaml .Values.resources | indent 12 }}
+  {{- with .Values.nodeSelector }}
+      nodeSelector:
+      {{ toYaml . | indent 8 }}
+      {{- end }}
+        {{- with .Values.affinity }}
+            affinity:
+            {{ toYaml . | indent 8 }}
+            {{- end }}
+              {{- with .Values.tolerations }}
+                  tolerations:
+                  {{ toYaml . | indent 8 }}
+                  {{- end }}
+

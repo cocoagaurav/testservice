@@ -1,0 +1,50 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.16.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: rabbitmq-server
+  name: rabbitmq-server
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: rabbitmq-server
+    spec:
+      containers:
+      - env:
+        - name: RABBITMQ_DEFAULT_PASS
+          valueFrom:
+            secretKeyRef:
+              name: apisecrets
+              key: rabbit_pass
+        - name: RABBITMQ_DEFAULT_USER
+          valueFrom:
+            secretKeyRef:
+              name: apisecrets
+              key: rabbit_user
+        - name: RABBITMQ_DEFAULT_VHOST
+          valueFrom:
+            secretKeyRef:
+              name: apisecrets
+              key: rabbit_host
+        - name: RABBITMQ_ERLANG_COOKIE
+          valueFrom:
+            secretKeyRef:
+              name:  apisecrets
+              key: rabbit_erlang_cookie
+        image: rabbitmq:3-management
+        name: rabbitmq-server
+        ports:
+        - containerPort: 15672
+        - containerPort: 5672
+        resources: {}
+      hostname: rabbitmq-server
+      restartPolicy: Always
+status: {}

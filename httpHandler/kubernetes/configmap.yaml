@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  SqlUrl: "root:password123@tcp(mysql:3306)/test?charset=utf8&parseTime=True&loc=Local"
+  RabbitUrl: "amqp://guest:guest@rabbitmq-server:5672/"
+  FireId: "firebase-adminsdk-6b9tl@testproject-fa267.iam.gserviceaccount.com"
+metadata:
+  name: myapiconfig
+  namespace: default

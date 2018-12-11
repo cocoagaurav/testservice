@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "myapiHelm.name" . }}
+  namespace: {{ .Values.namespace }}
+
+  labels:
+    app.kubernetes.io/name: {{ include "myapiHelm.name" . }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetport }}
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "myapiHelm.name" . }}
+
+status:
+  loadBalancer: {}
+
